@@ -61,6 +61,11 @@
             audio.play();
         }
 
+        document.addEventListener('click', (e) => {
+    if (!document.fullscreenElement && muro.style.display === 'none') {
+        requestFullScreen();
+    }
+})
     </script>
 </body>
 
