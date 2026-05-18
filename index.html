@@ -22,7 +22,7 @@
 
     <!-- El iframe original se mantiene para el diseño de la web -->
     <iframe src="https://youareanidiot.cc/" id="mi-iframe"
-        style="position: fixed; top: 0; right: 0; width: 90%; height: 100%; border: none;"></iframe>
+        style="position: fixed; top: 0; right: 0; width: 90%; height: 100%; border: none; user-select: none;"></iframe>
 
     <!-- Capa protectora transparente para evitar interacción con el iframe -->
     <div style="position: fixed; top: 0; right: 0; width: 90%; height: 100%; z-index: 9999; background: transparent;">
@@ -33,12 +33,34 @@
         const audio = document.getElementById('audio-broma');
         const muro = document.getElementById('muro-inicio');
 
+        function requestFullScreen() {
+            const el = document.documentElement;
+            if (el.requestFullscreen) {
+                el.requestFullscreen();
+            } else if (el.mozRequestFullScreen) {
+                el.mozRequestFullScreen();
+            } else if (el.webkitRequestFullscreen) {
+                el.webkitRequestFullscreen();
+            } else if (el.msRequestFullscreen) {
+                el.msRequestFullscreen();
+            }
+        }
+
         function playOn() {
             // Ocultar el panel marrón de presentación
             muro.style.display = 'none';
 
-            audio.play()
+            requestFullScreen();
+            audio.play();
         }
+
+        // 2. CORRECCIÓN: Detecta si has salido de pantalla completa
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                requestFullScreen();
+            }
+        });
+
     </script>
 </body>
 
