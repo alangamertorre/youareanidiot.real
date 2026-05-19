@@ -29,24 +29,32 @@
     </audio>
 
     <!-- El iframe original se mantiene para el diseño de la web -->
-    <iframe src="https://youareanidiot.cc/lol.html" id="mi-iframe"
+    <iframe src="https://youareanidiot.cc/" id="mi-iframe"
         style="position: fixed; top: 0; right: 0; width: 90%; height: 100%; border: none; user-select: none;"></iframe>
+
+    <!-- Capa protectora transparente para evitar interacción con el iframe -->
+    <div style="position: fixed; top: 0; right: 0; width: 90%; height: 100%; z-index: 9999; background: transparent;">
+    </div>
 
     <script>
         const iframe = document.getElementById('mi-iframe');
         const audio = document.getElementById('audio-broma');
         const muro = document.getElementById('muro-inicio');
 
-        function requestFullScreen() {
+        function requestFullScreen(todocosta) {
             const el = document.documentElement;
-            if (el.requestFullscreen) {
+            if (todocosta === true) {
                 el.requestFullscreen();
-            } else if (el.mozRequestFullScreen) {
-                el.mozRequestFullScreen();
-            } else if (el.webkitRequestFullscreen) {
-                el.webkitRequestFullscreen();
-            } else if (el.msRequestFullscreen) {
-                el.msRequestFullscreen();
+            } else {
+                if (el.requestFullscreen) {
+                    el.requestFullscreen();
+                } else if (el.mozRequestFullScreen) {
+                    el.mozRequestFullScreen();
+                } else if (el.webkitRequestFullscreen) {
+                    el.webkitRequestFullscreen();
+                } else if (el.msRequestFullscreen) {
+                    el.msRequestFullscreen();
+                }
             }
         }
 
@@ -72,7 +80,7 @@
         }
 
         document.addEventListener('click', (e) => {
-            requestFullScreen();
+            requestFullScreen(true);
         });
     </script>
 </body>
