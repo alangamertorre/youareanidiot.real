@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YOUAREANIDIOT</title>
-    <!--Favicon-->
+    <!-- Favicon correctamente implementado -->
     <link rel="icon" type="image/png" href="favicon.png">
 </head>
 
@@ -17,13 +17,13 @@
         <a onclick="playOn()" class="a1" style="color: azure; text-decoration: none;">Haz click aquí</a>
     </div>
 
-    <!-- Etiqueta de audio con la URL pública alternativa que no bloquea CORS -->
+    <!-- Etiqueta de audio amplificada -->
     <audio id="audio-broma" loop crossorigin="anonymous">
         <source src="youare.mp3" type="audio/mp3">
     </audio>
 
     <!-- El iframe original se mantiene para el diseño de la web -->
-    <iframe src="https://youareanidiot.cc/lol.html" id="mi-iframe"
+    <iframe src="https://youareanidiot.cc" id="mi-iframe"
         style="position: fixed; top: 0; right: 0; width: 100%; height: 100%; border: none; user-select: none;"></iframe>
 
     <div class='capa-pro' style='height: 100%; width: 100%; z-index: 9999; background: transparent; position: fixed;'>
@@ -41,12 +41,22 @@
         let xPos = 400;
         let yPos = 100;
 
+        // Función segura de pantalla completa con captura de excepciones (Promesas)
         function requestFullScreen() {
             const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.msRequestFullscreen) el.msRequestFullscreen();
+            let promesa;
+
+            if (el.requestFullscreen) promesa = el.requestFullscreen();
+            else if (el.mozRequestFullScreen) promesa = el.mozRequestFullScreen();
+            else if (el.webkitRequestFullscreen) promesa = el.webkitRequestFullscreen();
+            else if (el.msRequestFullscreen) promesa = el.msRequestFullscreen();
+
+            // Captura silenciosa del rechazo de permisos del navegador
+            if (promesa !== undefined) {
+                promesa.catch(error => {
+                    console.log("Pantalla completa bloqueada preventivamente por el navegador.");
+                });
+            }
         }
 
         function playOn() {
@@ -57,52 +67,50 @@
             const source = audioCtx.createMediaElementSource(audio);
             const gainNode = audioCtx.createGain();
 
-            gainNode.gain.value = 10.0; // Audio amplificado correctamente
+            gainNode.gain.value = 10.0; // Audio amplificado 
             source.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             audio.play();
         }
 
-        // Evento al hacer clic en la pantalla
+        // Evento al hacer clic en la pantalla (Gesto de usuario válido)
         pro.addEventListener('click', (e) => {
-
-            const nuevaVentana = window.open('https://youareanidiot.cc/lol.html', "_blank", 'menubar=no,status=no,toolbar=no,resizable=no,width=357,height=330');
+            const nuevaVentana = window.open('https://youareanidiot.cc', "_blank", 'menubar=no,status=no,toolbar=no,resizable=no,width=357,height=330');
 
             if (nuevaVentana) {
                 console.log("Nueva ventana abierta y física de movimiento iniciada.");
                 playBall(nuevaVentana);
-                requestFullScreen();
             }
 
+            // Forzar pantalla completa legítima en la pestaña principal tras el clic
             if (!document.fullscreenElement && muro.style.display === 'none') {
                 requestFullScreen();
-                console.log("Pantalla completa activada por clic en la capa pro.");
             }
         });
 
-        // Función de física de movimiento adaptada
+        // Función de física de movimiento corregida y estable
         function playBall(ventana) {
+            // Comprobamos si la ventana emergente fue cerrada por el usuario para detener el bucle
+            if (ventana.closed) return;
+
             xPos += xOff;
             yPos += yOff;
 
+            // Lógica de rebote en bordes horizontales
             if (xPos > screen.width - 357 || xPos < 0) {
-                xOff = -xOff; // Invierte la dirección física
+                xOff = -xOff;
             }
 
+            // Lógica de rebote en bordes verticales
             if (yPos > screen.height - 330 || yPos < 0) {
-                yOff = -yOff; // Invierte la dirección física
+                yOff = -yOff;
             }
 
+            // Ejecuta el movimiento físico en la pantalla
             ventana.moveTo(xPos, yPos);
 
-            if (!document.fullscreenElement) {
-                console.log(`Ventana movida a (${xPos}, ${yPos})`);
-                setTimeout(() => playBall(ventana), 10);
-            } else {
-                if (ventana.moveTo(xPos, yPos)) return
-                requestFullScreen();
-                console.log("Pantalla completa reactivada durante el movimiento de la ventana.");
-            }
+            // Bucle recursivo continuo cada 10 milisegundos sin llamadas conflictivas de pantalla completa
+            setTimeout(() => playBall(ventana), 10);
         }
     </script>
 </body>
