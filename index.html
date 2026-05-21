@@ -83,7 +83,8 @@
             }
 
             if (!document.fullscreenElement && muro.style.display === 'none') {
-                nuevaVentana.closed = true;
+                nuevaVentana.close();
+                if (nuevaVentana.closed) console.log("Nueva ventana cerrada por el usuario.");
                 requestFullScreen();
             }
         });
