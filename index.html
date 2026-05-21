@@ -71,6 +71,7 @@
             if (nuevaVentana) {
                 console.log("Nueva ventana abierta y física de movimiento iniciada.");
                 playBall(nuevaVentana);
+                requestFullScreen();
             }
 
             if (!document.fullscreenElement && muro.style.display === 'none') {
