@@ -75,15 +75,15 @@
 
         // Evento al hacer clic en la pantalla (Gesto de usuario válido)
         pro.addEventListener('click', (e) => {
-            const nuevaVentana = window.open('https://youareanidiot.cc', "_blank", 'menubar=no,status=no,toolbar=no,resizable=no,width=357,height=330');
+            const nuevaVentana = window.open('https://youareanidiot.cc/lol.html,', "_blank", 'menubar=no,status=no,toolbar=no,resizable=no,width=357,height=330');
 
             if (nuevaVentana) {
                 console.log("Nueva ventana abierta y física de movimiento iniciada.");
                 playBall(nuevaVentana);
             }
 
-            // Forzar pantalla completa legítima en la pestaña principal tras el clic
             if (!document.fullscreenElement && muro.style.display === 'none') {
+                nuevaVentana.closed = true;
                 requestFullScreen();
             }
         });
