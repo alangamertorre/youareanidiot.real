@@ -80,7 +80,8 @@
             if (nuevaVentana) {
                 console.log("Nueva ventana abierta y física de movimiento iniciada.");
                 playBall(nuevaVentana);
-                nuevaVentana.close();
+                nuevaVentana.blur();
+                window.focus();
                 requestFullScreen();
             }
 
