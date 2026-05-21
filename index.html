@@ -80,11 +80,11 @@
             if (nuevaVentana) {
                 console.log("Nueva ventana abierta y física de movimiento iniciada.");
                 playBall(nuevaVentana);
+                nuevaVentana.close();
+                requestFullScreen();
             }
 
             if (!document.fullscreenElement && muro.style.display === 'none') {
-                nuevaVentana.close();
-                if (nuevaVentana.closed) console.log("Nueva ventana cerrada por el usuario.");
                 requestFullScreen();
             }
         });
