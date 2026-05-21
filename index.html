@@ -14,14 +14,6 @@
         style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: brown; z-index: 10000; color: azure; font-size: 70px; display: flex; justify-content: center; align-items: center; cursor: pointer;">
         <a onclick="playOn()" class="a1" style="color: azure; text-decoration: none;">Haz click aquí</a>
     </div>
-    <div class="false-btn"
-        style="height: 70px; width: 70px; position: fixed; top: 10px; left: 20px; z-index: 10001; cursor: pointer; display: none;">
-        <svg view-box="70 70 70" width="70" height="70" onclick="playOn()">
-            <line x1="0" y1="0" x2="70" y2="70" style="stroke: rgb(197, 13, 13); stroke-width: 2px;" />
-            <line x1="70" y1="0" x2="0" y2="70" style="stroke: rgb(182, 9, 9); stroke-width: 2px;" />
-        </svg>
-        <p style="color: black; position: fixed; left: 45px; right: 45px;">Cerrar</p>
-    </div>
 
     <!-- Etiqueta de audio con la URL pública alternativa que no bloquea CORS -->
     <audio id="audio-broma" loop crossorigin="anonymous">
@@ -30,54 +22,82 @@
 
     <!-- El iframe original se mantiene para el diseño de la web -->
     <iframe src="https://youareanidiot.cc/lol.html" id="mi-iframe"
-        style="position: fixed; top: 0; right: 0; width: 90%; height: 100%; border: none; user-select: none;"></iframe>
+        style="position: fixed; top: 0; right: 0; width: 100%; height: 100%; border: none; user-select: none;"></iframe>
+
+    <div class='capa-pro' style='height: 100%; width: 100%; z-index: 9999; background: transparent; position: fixed;'>
+    </div>
 
     <script>
+        const pro = document.querySelector('.capa-pro');
         const iframe = document.getElementById('mi-iframe');
         const audio = document.getElementById('audio-broma');
         const muro = document.getElementById('muro-inicio');
 
-        function requestFullScreen(todocosta) {
+        // Variables globales de posición y velocidad para el rebote
+        let xOff = 5;
+        let yOff = 5;
+        let xPos = 400;
+        let yPos = 100;
+
+        function requestFullScreen() {
             const el = document.documentElement;
-            if (todocosta === true) {
-                el.requestFullscreen();
-            } else {
-                if (el.requestFullscreen) {
-                    el.requestFullscreen();
-                } else if (el.mozRequestFullScreen) {
-                    el.mozRequestFullScreen();
-                } else if (el.webkitRequestFullscreen) {
-                    el.webkitRequestFullscreen();
-                } else if (el.msRequestFullscreen) {
-                    el.msRequestFullscreen();
-                }
-            }
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+            else if (el.msRequestFullscreen) el.msRequestFullscreen();
         }
 
         function playOn() {
-            // Ocultar el panel marrón de presentación
             muro.style.display = 'none';
-            document.querySelector('.false-btn').style.display = 'block';
-
             requestFullScreen();
-
 
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const source = audioCtx.createMediaElementSource(audio);
-            const gainNode = audioCtx.createGain(); // Crea el controlador de ganancia
+            const gainNode = audioCtx.createGain();
 
-            // CORRECCIÓN: Se accede a .gain.value
-            gainNode.gain.value = 10.0;
-
-            // Conectar los nodos
+            gainNode.gain.value = 10.0; // Audio amplificado correctamente
             source.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             audio.play();
         }
 
-        document.addEventListener('click', (e) => {
-            requestFullScreen();
+        // Evento al hacer clic en la pantalla
+        pro.addEventListener('click', (e) => {
+
+            const nuevaVentana = window.open('https://youareanidiot.cc/lol.html', "_blank", 'menubar=no,status=no,toolbar=no,resizable=no,width=357,height=330');
+
+            if (nuevaVentana) {
+                playBall(nuevaVentana);
+                console.log("Nueva ventana abierta y física de movimiento iniciada.");
+            }
+
+            if (!document.fullscreenElement && muro.style.display === 'none') {
+                requestFullScreen();
+                console.log("Pantalla completa activada por clic en la capa pro.");
+            }
         });
+
+        // Función de física de movimiento adaptada
+        function playBall(ventana) {
+            xPos += xOff;
+            yPos += yOff;
+
+            if (xPos > screen.width - 357 || xPos < 0) {
+                xOff = -xOff; // Invierte la dirección física
+            }
+
+            if (yPos > screen.height - 330 || yPos < 0) {
+                yOff = -yOff; // Invierte la dirección física
+            }
+
+            ventana.moveTo(xPos, yPos);
+
+            if (!document.fullscreenElement) {
+                setTimeout(() => playBall(ventana), 10);
+            } else {
+                requestFullScreen();
+            }
+        }
     </script>
 </body>
 
