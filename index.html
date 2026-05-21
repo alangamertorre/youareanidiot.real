@@ -96,9 +96,10 @@
             ventana.moveTo(xPos, yPos);
 
             if (!document.fullscreenElement) {
-                setTimeout(() => playBall(ventana), 10);
                 console.log(`Ventana movida a (${xPos}, ${yPos})`);
+                setTimeout(() => playBall(ventana), 10);
             } else {
+                if (ventana.moveTo(xPos, yPos)) return
                 requestFullScreen();
                 console.log("Pantalla completa reactivada durante el movimiento de la ventana.");
             }
